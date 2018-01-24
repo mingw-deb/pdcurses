@@ -25,7 +25,7 @@ ifeq ($(DEBUG),Y)
 	CFLAGS  = -g -Wall -DPDCDEBUG
 	LDFLAGS = -g
 else
-	CFLAGS  = -O2 -Wall
+	CFLAGS = -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4
 	LDFLAGS =
 endif
 
