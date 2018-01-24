@@ -1,22 +1,25 @@
 Source: mingw-w64-pdcurses
 Priority: optional
 Maintainer: Tobias Schlemmer <keinstein@users.berlios.de>
-Build-Depends: debhelper (>= 9), autotools-dev
-Standards-Version: 3.9.8
+Build-Depends: debhelper (>= 9), autotools-dev,
+	       gcc-mingw-w64, g++-mingw-w64 (>= 1.7.1)
+Standards-Version: 4.1.1
 Section: libs
-Homepage: <insert the upstream URL, if relevant>
-#Vcs-Git: https://anonscm.debian.org/collab-maint/mingw-w64-pdcurses.git
-#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/mingw-w64-pdcurses.git
+Homepage: http://pdcurses.sourceforge.net
+#Vcs-Git: https://anonscm.debian.org/collab-maint/libpdcurses.git
+#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/libpdcurses.git
 
-Package: mingw-w64-pdcurses-dev
+Package: libpdcurses-mingw-w64-dev
 Section: libdevel
 Architecture: any
-Depends: mingw-w64-pdcursesBROKEN (= ${binary:Version}), ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Multi-Arch: same
+Depends: libpdcurses1-mingw-w64 (= ${binary:Version}), ${misc:Depends}
+Description: A collection of routines used to create PDCURSES format graphics (mingw-w64, headers/libs)
+ This Package contains the development files: headers and libraries.
 
-Package: mingw-w64-pdcursesBROKEN
+Package: libpdcurses1-mingw-w64
 Architecture: any
+Multi-Arch: same
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: A collection of routines used to create PDCURSES format graphics (mingw-w64, runtime)
+ This Package contains the runtime DLLs.
