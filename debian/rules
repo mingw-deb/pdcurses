@@ -63,11 +63,9 @@ override_dh_clean:
 override_dh_auto_configure:
 	for target in $(TARGETS) ; \
 	do \
-		mkdir -p build-$$target && \
+		cp -a win32 build-$$target && \
 		pushd build-$$target && \
 		$(EXECUTE) /usr/bin/prepare-winedllpath && \
-		$(EXECUTE) ../configure --prefix=/usr/$$target/ \
-				--build=$$target --host=$$target && \
 		popd || exit 1 ; \
 	done
 
@@ -75,7 +73,11 @@ override_dh_auto_build:
 	for target in $(TARGETS) ; \
 	do \
 		pushd build-$$target && \
-		$(EXECUTE) make && \
+		$(EXECUTE) make  -f mingwin32.mak \
+		      CC=$$target-gcc \
+		      LINK=$$target-gcc \
+		      STRIP=$$target-strip \
+		      WIDE=Y UTF8=Y DLL=Y&& \
 		popd || exit 1 ; \
 	done
 
@@ -83,7 +85,10 @@ override_dh_auto_install:
 	for target in $(TARGETS) ; \
 	do \
 		pushd build-$$target && \
-		$(EXECUTE) make DESTDIR=$(CURDIR)/debian/tmp install  && \
+		install -d "$(CURDIR)/debian/tmp/usr/$$target/"{bin,lib,include} && \
+		install pdcurses.dll "$(CURDIR)/debian/tmp/usr/$$target/bin/" && \
+		install pdcurses.a "$(CURDIR)/debian/tmp/usr/$$target/lib/libpdcurses.dll.a" && \
+		install -m 0644 ../curses.h ../panel.h ../term.h "$(CURDIR)/debian/tmp/usr/$$target/include/" && \
 		echo $(CURDIR)/debian/tmp/usr/$${target}/lib/*.dll.a ; \
 		ls $(CURDIR)/debian/tmp/usr/$${target}/lib/*.dll.a ; \
 		for d in  $(CURDIR)/debian/tmp/usr/$${target}/lib/*.dll.a ; \
@@ -126,7 +131,7 @@ override_dh_compress:
 override_dh_makeshlibs:
 	for target in $(TARGETS) ; \
 	do \
-		$(EXECUTE) env DEB_TARGET_GNU_TYPE="$$target" fakeroot dh_makeshlibs -O --sourcedirectory=$(CURDIR) ; \
+		$(EXECUTE) env DEB_TARGET_GNU_TYPE="$$targets" fakeroot dh_makeshlibs -O --sourcedirectory=$(CURDIR) ; \
 	done
 
 override_dh_gencontrol:
